@@ -1,0 +1,35 @@
+@model CheckoutViewModel
+@{ ViewData["Title"] = "Đặt hàng"; }
+
+<h1>Đặt hàng</h1>
+
+<div class="checkout">
+    <form method="post" class="box" asp-action="Checkout">
+        <div asp-validation-summary="ModelOnly" class="alert bad"></div>
+
+        <div class="field"><label asp-for="CustomerName"></label><input asp-for="CustomerName" autocomplete="name" /><span class="err" asp-validation-for="CustomerName"></span></div>
+        <div class="field"><label asp-for="Phone"></label><input asp-for="Phone" inputmode="tel" autocomplete="tel" /><span class="err" asp-validation-for="Phone"></span></div>
+        <div class="field"><label asp-for="Email"></label><input asp-for="Email" autocomplete="email" /><span class="err" asp-validation-for="Email"></span></div>
+        <div class="field"><label asp-for="Address"></label><input asp-for="Address" autocomplete="street-address" /><span class="err" asp-validation-for="Address"></span></div>
+        <div class="field"><label asp-for="Note"></label><textarea asp-for="Note" rows="3"></textarea></div>
+
+        <fieldset>
+            <legend>Hình thức thanh toán</legend>
+            <label class="radio"><input type="radio" asp-for="PaymentMethod" value="COD" /> Thanh toán khi nhận hàng (COD)</label>
+            <label class="radio"><input type="radio" asp-for="PaymentMethod" value="Chuyển khoản" /> Chuyển khoản ngân hàng</label>
+            <label class="radio"><input type="radio" asp-for="PaymentMethod" value="Tại showroom" /> Thanh toán tại showroom</label>
+        </fieldset>
+
+        <button class="btn" type="submit">Xác nhận đặt hàng</button>
+    </form>
+
+    <aside class="box summary">
+        <h2>Đơn hàng của bạn</h2>
+        @foreach (var i in Model.Items)
+        {
+            <div class="sum-line"><span>@i.Name <small>x @i.Quantity</small></span><b>@Fmt.Vnd(i.LineTotal)</b></div>
+        }
+        <div class="total-row"><span>Tổng cộng</span><span class="price">@Fmt.Vnd(Model.Total)</span></div>
+        <a href="/gio-hang">Sửa giỏ hàng</a>
+    </aside>
+</div>

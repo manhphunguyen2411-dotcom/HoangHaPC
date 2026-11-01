@@ -1,0 +1,25 @@
+@model IEnumerable<Product>
+@{ ViewData["Title"] = "Sản phẩm"; var cats = (List<string>)ViewBag.Categories; var cur = (string?)ViewBag.Current; }
+
+<div class="chips">
+    <a class="chip @(cur == null ? "on" : "")" href="/">Tất cả</a>
+    @foreach (var c in cats)
+    {
+        <a class="chip @(cur == c ? "on" : "")" href="/?category=@Uri.EscapeDataString(c)">@c</a>
+    }
+</div>
+
+<div class="grid">
+@foreach (var p in Model)
+{
+    <a class="card" href="/san-pham/@p.Slug">
+        <div class="thumb">@p.Category</div>
+        <h3>@p.Name</h3>
+        <div class="price-row">
+            <span class="price">@Fmt.Vnd(p.Price)</span>
+            @if (p.OldPrice > p.Price) { <s class="old">@Fmt.Vnd(p.OldPrice.Value)</s> }
+        </div>
+        @if (p.Stock <= 0) { <span class="tag out">Hết hàng</span> } else if (p.DiscountPercent > 0) { <span class="tag">-@p.DiscountPercent%</span> }
+    </a>
+}
+</div>

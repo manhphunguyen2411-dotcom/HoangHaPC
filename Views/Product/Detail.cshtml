@@ -1,0 +1,65 @@
+@model Product
+@{ ViewData["Title"] = Model.Name; var related = (List<Product>)ViewBag.Related; var inStock = Model.Stock > 0; }
+
+<nav class="crumb"><a href="/">Sản phẩm</a> / <a href="/?category=@Uri.EscapeDataString(Model.Category)">@Model.Category</a> / @Model.Name</nav>
+
+<section class="detail">
+    <div class="gallery"><div class="thumb big">@Model.Category</div></div>
+
+    <div class="info">
+        <h1>@Model.Name</h1>
+        <p class="meta">Thương hiệu: <b>@Model.Brand</b> | Bảo hành: <b>@Model.Warranty</b> | Tình trạng:
+            @if (inStock) { <b class="green">Còn @Model.Stock sản phẩm</b> } else { <b class="red">Hết hàng</b> }
+        </p>
+
+        <div class="price-row lg">
+            <span class="price">@Fmt.Vnd(Model.Price)</span>
+            @if (Model.OldPrice > Model.Price)
+            {
+                <s class="old">@Fmt.Vnd(Model.OldPrice.Value)</s>
+                <span class="tag">-@Model.DiscountPercent%</span>
+            }
+        </div>
+
+        <p>@Model.ShortDescription</p>
+        <ul class="ticks">@foreach (var h in Model.Highlights) { <li>@h</li> }</ul>
+
+        @if (inStock)
+        {
+            <form method="post" asp-controller="Cart" asp-action="Add" class="buy">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="/san-pham/@Model.Slug" />
+                <label>Số lượng
+                    <input type="number" name="quantity" value="1" min="1" max="@Model.Stock" />
+                </label>
+                <button class="btn ghost" type="submit">Thêm vào giỏ</button>
+                <button class="btn" type="submit" name="buyNow" value="true">Mua ngay</button>
+            </form>
+        }
+        else
+        {
+            <p class="alert bad">Sản phẩm tạm hết hàng. Gọi 0969 123 666 để được báo khi có hàng.</p>
+        }
+    </div>
+</section>
+
+<section class="box">
+    <h2>Thông số kỹ thuật</h2>
+    <table class="specs">
+        @foreach (var s in Model.Specs) { <tr><th>@s.Key</th><td>@s.Value</td></tr> }
+    </table>
+</section>
+
+<section>
+    <h2>Sản phẩm liên quan</h2>
+    <div class="grid">
+    @foreach (var p in related)
+    {
+        <a class="card" href="/san-pham/@p.Slug">
+            <div class="thumb">@p.Category</div>
+            <h3>@p.Name</h3>
+            <span class="price">@Fmt.Vnd(p.Price)</span>
+        </a>
+    }
+    </div>
+</section>

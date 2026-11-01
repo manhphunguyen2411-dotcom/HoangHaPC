@@ -1,0 +1,48 @@
+@model List<CartItem>
+@{ ViewData["Title"] = "Giỏ hàng"; }
+
+<h1>Chi tiết đơn hàng</h1>
+
+@if (Model.Count == 0)
+{
+    <div class="box empty">Giỏ hàng đang trống. <a href="/">Chọn sản phẩm</a> để bắt đầu.</div>
+}
+else
+{
+    <div class="box">
+    <table class="lines">
+        <thead><tr><th>Sản phẩm</th><th>Đơn giá</th><th>Số lượng</th><th>Thành tiền</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var i in Model)
+        {
+            <tr>
+                <td><a href="/san-pham/@i.Slug">@i.Name</a></td>
+                <td>@Fmt.Vnd(i.Price)</td>
+                <td>
+                    <form method="post" asp-action="Update" class="inline">
+                        <input type="hidden" name="productId" value="@i.ProductId" />
+                        <input type="number" name="quantity" value="@i.Quantity" min="0" />
+                        <button class="btn sm ghost" type="submit">Cập nhật</button>
+                    </form>
+                </td>
+                <td><b>@Fmt.Vnd(i.LineTotal)</b></td>
+                <td>
+                    <form method="post" asp-action="Remove" class="inline">
+                        <input type="hidden" name="productId" value="@i.ProductId" />
+                        <button class="btn sm danger" type="submit">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="total-row">
+        <span>Tổng cộng</span>
+        <span class="price">@Fmt.Vnd(Model.Sum(i => i.LineTotal))</span>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="/">Tiếp tục chọn hàng</a>
+        <a class="btn" href="/dat-hang">Tiến hành đặt hàng</a>
+    </div>
+    </div>
+}

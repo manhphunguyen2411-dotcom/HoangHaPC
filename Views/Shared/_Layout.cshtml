@@ -1,0 +1,34 @@
+@using HoangHaPC.Services
+@inject CartService Cart
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Hoàng Hà PC</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+<header class="top">
+    <div class="wrap top-in">
+        <a class="logo" href="/">Hoàng Hà <b>PC</b></a>
+        <nav>
+            <a href="/">Sản phẩm</a>
+            <a href="/don-hang/tra-cuu">Tra cứu đơn hàng</a>
+            <a class="cart" href="/gio-hang">Giỏ hàng <span class="badge">@Cart.Count</span></a>
+        </nav>
+        <span class="hotline">Hotline 0969 123 666</span>
+    </div>
+</header>
+
+<main class="wrap">
+    @if (TempData["Success"] is string ok) { <div class="alert ok">@ok</div> }
+    @if (TempData["Error"] is string err) { <div class="alert bad">@err</div> }
+    @RenderBody()
+</main>
+
+<footer class="foot">
+    <div class="wrap">Hoàng Hà PC - Máy tính đồ họa, Workstation, linh kiện. Showroom: 94E-94F Đường Láng, Đống Đa, Hà Nội. Dự án mẫu phục vụ học tập.</div>
+</footer>
+</body>
+</html>
